@@ -9,7 +9,8 @@
       type="search"
       class="form-control ms-4"
       placeholder="Search"
-      oninput="searchTodoItems('completed-list-search-input', 'completed-list-items')"
+      name="searchText"
+      [(ngModel)]="searchText"
     />
     <button
       class="button-color btn btn-primary me-4"
@@ -27,7 +28,7 @@
     (dragleave)="dragleave()"
     (drop)="drop()"
   >
-    @for(todo of completedTodos(); track todo.id){
+    @for(todo of filteredCompletedTodos(); track todo.id){
     <app-completed-item
       class="item m-2"
       completeItemTitle="{{`${todo.priority}. ${todo.name}`}}"

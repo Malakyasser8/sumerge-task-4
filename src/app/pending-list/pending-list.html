@@ -42,7 +42,8 @@
       type="search"
       class="form-control ms-4"
       placeholder="Search"
-      oninput="searchTodoItems('pending-list-search-input', 'pending-list-items')"
+      name="searchText"
+      [(ngModel)]="searchText"
     />
     <button
       class="button-color btn btn-primary me-4"
@@ -56,7 +57,7 @@
     id="pending-list-items"
     class="pending-list-items d-flex justify-content-center flex-column m-4 list-group"
   >
-    @for(todo of pendingTodos(); track todo.id){
+    @for(todo of filteredPendingTodos(); track todo.id){
     <app-pending-item class="item m-2" [pendingTodo]="todo" />
     }
   </section>

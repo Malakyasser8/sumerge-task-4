@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { PendingItem } from './pending-item/pending-item';
 import { TodosService } from '../todos/todos.service';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -13,10 +13,18 @@ import { FormsModule, NgForm } from '@angular/forms';
 export class PendingList implements OnInit {
   priority = signal<number | undefined>(undefined);
   todoName = signal<string>('');
+  searchText = signal<string>('');
 
   todosService = inject(TodosService);
   pendingTodos = this.todosService.loadedPendingTodos;
-
+  filteredPendingTodos = computed(() =>
+    this.todosService
+      .loadedPendingTodos()
+      .filter((todo) =>
+        todo.name.toLowerCase().includes(this.searchText().toLowerCase())
+      )
+  );
+  
   ngOnInit(): void {
     const subscription = this.todosService.loadTodos('pending').subscribe({
       complete: () => {
