@@ -9,15 +9,17 @@ import {
 import { PendingItem } from './pending-item/pending-item';
 import { TodosService } from '../todos/todos.service';
 import { FormsModule, NgForm } from '@angular/forms';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-pending-list',
   standalone: true,
   templateUrl: './pending-list.html',
   styleUrl: './pending-list.css',
-  imports: [PendingItem, FormsModule],
+  imports: [PendingItem, FormsModule, MatProgressSpinner],
 })
 export class PendingList implements OnInit {
+  isLoading: boolean = false;
   priority = signal<number | undefined>(undefined);
   todoName = signal<string>('');
   searchText = signal<string>('');
@@ -35,10 +37,13 @@ export class PendingList implements OnInit {
   );
 
   ngOnInit(): void {
+    this.isLoading = true;
     const subscriber = this.todosService.loadTodos('pending').subscribe({
+      next: (val) => console.log(val),
       complete: () => {
         console.log('Retrieved Pending Todos successfully');
         console.log(this.pendingTodos());
+        this.isLoading = false;
       },
       error: (err: Error) => {
         console.log(err.message);
@@ -60,6 +65,7 @@ export class PendingList implements OnInit {
     console.log(enteredName);
     console.log(enteredPriority);
 
+    this.isLoading = true;
     const subscriber = this.todosService
       .insertTodo({
         name: this.todoName(),
@@ -69,6 +75,7 @@ export class PendingList implements OnInit {
       .subscribe({
         complete: () => {
           console.log('Todo is inserted successfully');
+          this.isLoading = false;
         },
         error: (err: Error) => {
           console.log(err.message);

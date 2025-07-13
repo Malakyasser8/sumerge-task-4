@@ -1,15 +1,17 @@
 import { TodosService } from './../../todos/todos.service';
 import { Component, Input, signal, inject, DestroyRef } from '@angular/core';
 import { Todo } from '../../todos/todos.model';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-pending-item',
-  imports: [],
+  imports: [MatProgressSpinner],
   templateUrl: './pending-item.html',
   styleUrl: './pending-item.css',
 })
 export class PendingItem {
   @Input({ required: true }) pendingTodo!: Todo;
+  isLoading: boolean = false;
   todosService = inject(TodosService);
   ondestoryRef = inject(DestroyRef);
 
@@ -19,6 +21,7 @@ export class PendingItem {
   }
 
   addTodoToCompletedList() {
+    this.isLoading = true;
     const subscriber = this.todosService
       .updateTodo({ ...this.pendingTodo, status: 'completed' })
       .subscribe({
@@ -28,6 +31,7 @@ export class PendingItem {
               this.pendingTodo.id
             } with data: ${JSON.stringify(JSON.stringify(this.pendingTodo))}`
           );
+          this.isLoading = false;
         },
         error: (err: Error) => {
           console.log(err.message);

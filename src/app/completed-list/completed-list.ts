@@ -1,17 +1,26 @@
-import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { PendingItem } from '../pending-list/pending-item/pending-item';
 import { CompletedItem } from './completed-item/completed-item';
 import { TodosService } from '../todos/todos.service';
 import { FormsModule } from '@angular/forms';
 import { Todo } from '../todos/todos.model';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-completed-list',
-  imports: [CompletedItem, FormsModule],
+  imports: [CompletedItem, FormsModule, MatProgressSpinner],
   templateUrl: './completed-list.html',
   styleUrl: './completed-list.css',
 })
-export class CompletedList {
+export class CompletedList implements OnInit {
+  isLoading: boolean = false;
   isDragOver: boolean = false;
   searchText = signal<string>('');
 
@@ -28,10 +37,12 @@ export class CompletedList {
   );
 
   ngOnInit(): void {
+    this.isLoading = true;
     const subscriber = this.todosService.loadTodos('completed').subscribe({
       complete: () => {
         console.log('Retrieved Completed Todos successfully');
         console.log(this.completedTodos());
+        this.isLoading = false;
       },
       error: (err: Error) => {
         console.log(err.message);
@@ -59,6 +70,7 @@ export class CompletedList {
     const draggedTodo: Todo = JSON.parse(data);
     console.log('Dropped todo:', draggedTodo);
 
+    this.isLoading = true;
     const subscriber = this.todosService
       .updateTodo({ ...draggedTodo, status: 'completed' })
       .subscribe({
@@ -68,6 +80,7 @@ export class CompletedList {
               draggedTodo.id
             } with data: ${JSON.stringify(JSON.stringify(draggedTodo))}`
           );
+          this.isLoading = false;
         },
         error: (err: Error) => {
           console.log(err.message);

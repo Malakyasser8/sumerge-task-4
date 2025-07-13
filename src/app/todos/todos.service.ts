@@ -125,7 +125,7 @@ export class TodosService {
         `${this.baseUrl}/${updatedTodo.id}?updateMask.fieldPaths=status`,
         JSON.stringify({
           fields: {
-            status: { stringValue: status },
+            status: { stringValue: updatedTodo.status },
           },
         }),
         {
