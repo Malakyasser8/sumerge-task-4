@@ -1,0 +1,63 @@
+<div id="pending-list" class="col pending-list">
+  <h4 class="m-4">Pending List</h4>
+  <form
+    #form="ngForm"
+    id="todo-form"
+    class="d-flex justify-content-center align-items-center flex-column w-100"
+    (ngSubmit)="onSubmit(form)"
+  >
+    <div class="input-group mb-2">
+      <input
+        type="number"
+        id="priority-value"
+        class="form-control ms-4"
+        min="1"
+        placeholder="Enter Priority Value"
+        required
+        name="priority"
+        [(ngModel)]="priority"
+      />
+      <input
+        type="search"
+        class="form-control ms-1"
+        id="todo-text-input"
+        placeholder="Write your Todo Name"
+        name="todoName"
+        [(ngModel)]="todoName"
+      />
+      <button class="button-color btn btn-primary me-4" type="submit">
+        Add
+      </button>
+    </div>
+    <div id="error-input" class="error-msg" style="display: none">
+      Please input todo name
+    </div>
+  </form>
+  <div
+    id="pending-list-search"
+    class="pending-list-search input-group m-2 w-100"
+  >
+    <input
+      id="pending-list-search-input"
+      type="search"
+      class="form-control ms-4"
+      placeholder="Search"
+      oninput="searchTodoItems('pending-list-search-input', 'pending-list-items')"
+    />
+    <button
+      class="button-color btn btn-primary me-4"
+      type="button"
+      id="search-addon"
+    >
+      <i class="bi bi-search"></i>
+    </button>
+  </div>
+  <section
+    id="pending-list-items"
+    class="pending-list-items d-flex justify-content-center flex-column m-4 list-group"
+  >
+    @for(todo of pendingTodos(); track todo.id){
+    <app-pending-item class="item m-2" [pendingTodo]="todo" />
+    }
+  </section>
+</div>

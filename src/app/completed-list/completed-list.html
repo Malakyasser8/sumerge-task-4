@@ -1,0 +1,37 @@
+<div id="completed-list" class="col completed-list">
+  <h4 class="m-4">Completed List</h4>
+  <div
+    id="completed-list-search"
+    class="input-group mb-2 completed-list-search w-100"
+  >
+    <input
+      id="completed-list-search-input"
+      type="search"
+      class="form-control ms-4"
+      placeholder="Search"
+      oninput="searchTodoItems('completed-list-search-input', 'completed-list-items')"
+    />
+    <button
+      class="button-color btn btn-primary me-4"
+      type="button"
+      id="search-addon"
+    >
+      <i class="bi bi-search"></i>
+    </button>
+  </div>
+  <section
+    id="completed-list-items"
+    class="completed-list-items d-flex justify-content-center flex-column m-4 list-group"
+    [class.drag-over]="isDragOver"
+    (dragover)="dragOver()"
+    (dragleave)="dragleave()"
+    (drop)="drop()"
+  >
+    @for(todo of completedTodos(); track todo.id){
+    <app-completed-item
+      class="item m-2"
+      completeItemTitle="{{`${todo.priority}. ${todo.name}`}}"
+    />
+    }
+  </section>
+</div>

@@ -1,0 +1,9 @@
+.item {
+  border: none;
+  outline: none;
+  background-color: transparent;
+}
+
+.grab-item {
+  cursor: grab;
+}

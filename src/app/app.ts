@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, ViewEncapsulation } from '@angular/core';
+import { PendingList } from './pending-list/pending-list';
+import { CompletedList } from "./completed-list/completed-list";
+import { ClearAllButton } from "./todos/clear-all-button/clear-all-button";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [PendingList, CompletedList, ClearAllButton],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App {
   protected title = 'todo-list-angular';
