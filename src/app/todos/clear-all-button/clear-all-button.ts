@@ -1,5 +1,5 @@
 import { TodosService } from './../todos.service';
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 
 @Component({
   selector: 'app-clear-all-button',
@@ -9,6 +9,8 @@ import { Component, inject } from '@angular/core';
 })
 export class ClearAllButton {
   todosService = inject(TodosService);
+  ondestoryRef = inject(DestroyRef);
+
   deleteAllData() {
     const subscriber = this.todosService.deleteAllTodos().subscribe({
       complete: () => console.log('Deleted all todos successfully'),
@@ -16,5 +18,7 @@ export class ClearAllButton {
         console.log(err.message);
       },
     });
+
+    this.ondestoryRef.onDestroy(() => subscriber.unsubscribe());
   }
 }

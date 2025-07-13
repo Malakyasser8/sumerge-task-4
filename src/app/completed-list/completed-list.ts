@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { PendingItem } from '../pending-list/pending-item/pending-item';
 import { CompletedItem } from './completed-item/completed-item';
 import { TodosService } from '../todos/todos.service';
@@ -14,7 +14,9 @@ export class CompletedList {
   isDragOver: boolean = false;
   searchText = signal<string>('');
 
+  ondestoryRef = inject(DestroyRef);
   todosService = inject(TodosService);
+
   completedTodos = this.todosService.loadedCompletedTodos;
   filteredCompletedTodos = computed(() =>
     this.todosService
@@ -25,7 +27,7 @@ export class CompletedList {
   );
 
   ngOnInit(): void {
-    const subscription = this.todosService.loadTodos('completed').subscribe({
+    const subscriber = this.todosService.loadTodos('completed').subscribe({
       complete: () => {
         console.log('Retrieved Completed Todos successfully');
         console.log(this.completedTodos());
@@ -34,6 +36,8 @@ export class CompletedList {
         console.log(err.message);
       },
     });
+
+    this.ondestoryRef.onDestroy(() => subscriber.unsubscribe());
   }
 
   dragOver() {

@@ -1,5 +1,5 @@
 import { TodosService } from './../../todos/todos.service';
-import { Component, Input, signal, inject } from '@angular/core';
+import { Component, Input, signal, inject, DestroyRef } from '@angular/core';
 import { Todo } from '../../todos/todos.model';
 
 @Component({
@@ -12,13 +12,14 @@ export class PendingItem {
   @Input({ required: true }) pendingTodo!: Todo;
   selectedItem = signal<PendingItem | undefined>(undefined);
   todosService = inject(TodosService);
+  ondestoryRef = inject(DestroyRef);
 
   dragStart(element: PendingItem) {
     this.selectedItem.set(element);
   }
 
   addTodoToCompletedList() {
-    const subscription = this.todosService
+    const subscriber = this.todosService
       .updateTodo({ ...this.pendingTodo, status: 'completed' })
       .subscribe({
         complete: () => {
@@ -32,5 +33,7 @@ export class PendingItem {
           console.log(err.message);
         },
       });
+
+    this.ondestoryRef.onDestroy(() => subscriber.unsubscribe());
   }
 }

@@ -1,4 +1,11 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { PendingItem } from './pending-item/pending-item';
 import { TodosService } from '../todos/todos.service';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -15,7 +22,9 @@ export class PendingList implements OnInit {
   todoName = signal<string>('');
   searchText = signal<string>('');
 
+  ondestoryRef = inject(DestroyRef);
   todosService = inject(TodosService);
+
   pendingTodos = this.todosService.loadedPendingTodos;
   filteredPendingTodos = computed(() =>
     this.todosService
@@ -24,9 +33,9 @@ export class PendingList implements OnInit {
         todo.name.toLowerCase().includes(this.searchText().toLowerCase())
       )
   );
-  
+
   ngOnInit(): void {
-    const subscription = this.todosService.loadTodos('pending').subscribe({
+    const subscriber = this.todosService.loadTodos('pending').subscribe({
       complete: () => {
         console.log('Retrieved Pending Todos successfully');
         console.log(this.pendingTodos());
@@ -35,6 +44,8 @@ export class PendingList implements OnInit {
         console.log(err.message);
       },
     });
+
+    this.ondestoryRef.onDestroy(() => subscriber.unsubscribe());
   }
 
   onSubmit(formData: NgForm) {
@@ -49,7 +60,7 @@ export class PendingList implements OnInit {
     console.log(enteredName);
     console.log(enteredPriority);
 
-    const subsription = this.todosService
+    const subscriber = this.todosService
       .insertTodo({
         name: this.todoName(),
         priority: this.priority()!,
@@ -63,6 +74,8 @@ export class PendingList implements OnInit {
           console.log(err.message);
         },
       });
+
+    this.ondestoryRef.onDestroy(() => subscriber.unsubscribe());
 
     //reset form by clearing input values and reset everything
     formData.form.reset();
