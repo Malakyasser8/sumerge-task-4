@@ -24,9 +24,9 @@
     id="completed-list-items"
     class="completed-list-items d-flex justify-content-center flex-column m-4 list-group"
     [class.drag-over]="isDragOver"
-    (dragover)="dragOver()"
-    (dragleave)="dragleave()"
-    (drop)="drop()"
+    (dragover)="dragOver($event)"
+    (dragleave)="dragleave($event)"
+    (drop)="drop($event)"
   >
     @for(todo of filteredCompletedTodos(); track todo.id){
     <app-completed-item

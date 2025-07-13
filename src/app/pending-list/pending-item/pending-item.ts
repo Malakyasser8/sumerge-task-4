@@ -10,12 +10,12 @@ import { Todo } from '../../todos/todos.model';
 })
 export class PendingItem {
   @Input({ required: true }) pendingTodo!: Todo;
-  selectedItem = signal<PendingItem | undefined>(undefined);
   todosService = inject(TodosService);
   ondestoryRef = inject(DestroyRef);
 
-  dragStart(element: PendingItem) {
-    this.selectedItem.set(element);
+  dragStart(event: DragEvent) {
+    const data = JSON.stringify(this.pendingTodo);
+    event.dataTransfer?.setData('application/json', data);
   }
 
   addTodoToCompletedList() {
