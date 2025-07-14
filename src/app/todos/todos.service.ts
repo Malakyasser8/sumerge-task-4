@@ -11,13 +11,14 @@ export class TodosService {
   private pendingTodos = signal<Todo[]>([]);
   private completedTodos = signal<Todo[]>([]);
   baseUrl = `https://firestore.googleapis.com/v1beta1/projects/sumerge-task-3-todo-list/databases/(default)/documents/todos`;
+  timeoutTime: number = 10000;
 
   loadedPendingTodos = this.pendingTodos.asReadonly();
   loadedCompletedTodos = this.completedTodos.asReadonly();
 
   loadTodos(requiredStatus: Status) {
     return this.httpClient.get<any>(this.baseUrl).pipe(
-      timeout(5000),
+      timeout(this.timeoutTime),
       map((resData) => {
         const docs = resData.documents || [];
 
@@ -53,7 +54,7 @@ export class TodosService {
 
   deleteTodo(id: string) {
     return this.httpClient.delete(`${this.baseUrl}/${id}`).pipe(
-      timeout(5000),
+      timeout(this.timeoutTime),
       catchError((error) => {
         console.error('Error deleting todo:', error.message);
         return throwError(() => new Error(error.message));
@@ -66,7 +67,7 @@ export class TodosService {
     const deleteCalls = allTodos.map((todo) => this.deleteTodo(todo.id));
 
     return forkJoin(deleteCalls).pipe(
-      timeout(5000),
+      timeout(this.timeoutTime),
       map(() => {
         this.pendingTodos.set([]);
         this.completedTodos.set([]);
@@ -91,7 +92,7 @@ export class TodosService {
         })
       )
       .pipe(
-        timeout(5000),
+        timeout(this.timeoutTime),
         map((response: any) => {
           const newTodo: Todo = {
             id: response.name.split('/').pop(),
@@ -139,7 +140,7 @@ export class TodosService {
         }
       )
       .pipe(
-        timeout(5000),
+        timeout(this.timeoutTime),
         map((reponse: any) => {
           this.pendingTodos.set(
             this.pendingTodos().filter((todo) => todo.id != updatedTodo.id)
