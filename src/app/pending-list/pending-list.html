@@ -1,9 +1,5 @@
-@if(isLoading){
-<div class="overlay">
-  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-</div>
-}
-<div id="pending-list" class="col pending-list">
+<app-spinner [isLoading]="isLoading" />
+<div id="pending-list" class="pending-list">
   <h4 class="m-4">Pending List</h4>
   <form
     #form="ngForm"
@@ -19,6 +15,7 @@
         min="1"
         placeholder="Enter Priority Value"
         required
+        min="0"
         name="priority"
         [(ngModel)]="priority"
       />
@@ -29,14 +26,15 @@
         placeholder="Write your Todo Name"
         name="todoName"
         [(ngModel)]="todoName"
+        required
+        minlength="1"
+        maxlength="500"
       />
       <button class="button-color btn btn-primary me-4" type="submit">
         Add
       </button>
     </div>
-    <div id="error-input" class="error-msg" style="display: none">
-      Please input todo name
-    </div>
+    <app-error-component [errorMessage]="errorMessage()" />
   </form>
   <div
     id="pending-list-search"

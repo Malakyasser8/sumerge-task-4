@@ -1,8 +1,4 @@
-@if(isLoading){
-<div class="overlay">
-  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-</div>
-}
+<app-spinner [isLoading]="isLoading" />
 <div
   id="pending-check-item-id"
   data-priority="0"
@@ -18,7 +14,8 @@
     type="checkbox"
     value=""
     id="flexCheckDefault"
-    (click)="addTodoToCompletedList()"
+    [checked]="checkboxChecked"
+    (change)="onCheckboxChange($event)"
   />
   <label
     id="pending-check-item-label"
@@ -27,4 +24,5 @@
   >
     {{ `${pendingTodo.priority}. ${pendingTodo.name}` }}
   </label>
+  <app-error-component [errorMessage]="errorMessage()" />
 </div>

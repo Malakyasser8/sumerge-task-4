@@ -1,16 +1,19 @@
 import { TodosService } from './../../todos/todos.service';
 import { Component, Input, signal, inject, DestroyRef } from '@angular/core';
 import { Todo } from '../../todos/todos.model';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { ErrorComponent } from '../../shared/error-component/error-component';
+import { Spinner } from '../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-pending-item',
-  imports: [MatProgressSpinner],
+  imports: [ErrorComponent, Spinner],
   templateUrl: './pending-item.html',
   styleUrl: './pending-item.css',
 })
 export class PendingItem {
   @Input({ required: true }) pendingTodo!: Todo;
+  errorMessage = signal<string>('');
+  checkboxChecked = false;
   isLoading: boolean = false;
   todosService = inject(TodosService);
   ondestoryRef = inject(DestroyRef);
@@ -18,6 +21,15 @@ export class PendingItem {
   dragStart(event: DragEvent) {
     const data = JSON.stringify(this.pendingTodo);
     event.dataTransfer?.setData('application/json', data);
+  }
+
+  onCheckboxChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.checkboxChecked = input.checked; // update checkbox signal
+
+    if (input.checked) {
+      this.addTodoToCompletedList();
+    }
   }
 
   addTodoToCompletedList() {
@@ -32,9 +44,15 @@ export class PendingItem {
             } with data: ${JSON.stringify(JSON.stringify(this.pendingTodo))}`
           );
           this.isLoading = false;
+          this.errorMessage.set('');
         },
         error: (err: Error) => {
+          this.errorMessage.set(
+            'Error while marking todo as completed. Please try again later'
+          );
           console.log(err.message);
+          this.checkboxChecked = false;
+          this.isLoading = false;
         },
       });
 

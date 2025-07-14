@@ -1,3 +1,4 @@
+import { ErrorComponent } from '../shared/error-component/error-component';
 import {
   Component,
   computed,
@@ -6,22 +7,22 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { PendingItem } from '../pending-list/pending-item/pending-item';
 import { CompletedItem } from './completed-item/completed-item';
 import { TodosService } from '../todos/todos.service';
 import { FormsModule } from '@angular/forms';
 import { Todo } from '../todos/todos.model';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Spinner } from '../shared/spinner/spinner';
 
 @Component({
   selector: 'app-completed-list',
-  imports: [CompletedItem, FormsModule, MatProgressSpinner],
+  imports: [CompletedItem, FormsModule, ErrorComponent, Spinner],
   templateUrl: './completed-list.html',
   styleUrl: './completed-list.css',
 })
 export class CompletedList implements OnInit {
   isLoading: boolean = false;
   isDragOver: boolean = false;
+  errorMessage = signal<string>('');
   searchText = signal<string>('');
 
   ondestoryRef = inject(DestroyRef);
@@ -43,9 +44,14 @@ export class CompletedList implements OnInit {
         console.log('Retrieved Completed Todos successfully');
         console.log(this.completedTodos());
         this.isLoading = false;
+        this.errorMessage.set('');
       },
       error: (err: Error) => {
+        this.errorMessage.set(
+          'Error retriving completed todos. Please try again later'
+        );
         console.log(err.message);
+        this.isLoading = false;
       },
     });
 
@@ -80,10 +86,15 @@ export class CompletedList implements OnInit {
               draggedTodo.id
             } with data: ${JSON.stringify(JSON.stringify(draggedTodo))}`
           );
+          this.errorMessage.set('');
           this.isLoading = false;
         },
         error: (err: Error) => {
+          this.errorMessage.set(
+            'Error while marking todo as completed. Please try again later'
+          );
           console.log(err.message);
+          this.isLoading = false;
         },
       });
 

@@ -35,10 +35,3 @@ h1 {
   background-color: rgb(133, 14, 231);
   border: 0;
 }
-
-.error-msg {
-  color: rgb(204, 0, 0);
-  display: none;
-  font-size: small;
-}
-
