@@ -17,7 +17,7 @@ import { Spinner } from '../shared/spinner/spinner';
   selector: 'app-completed-list',
   imports: [CompletedItem, FormsModule, ErrorComponent, Spinner],
   templateUrl: './completed-list.html',
-  styleUrl: './completed-list.css',
+  styleUrls: ['./completed-list.css', '../shared/shared-list-container.css'],
 })
 export class CompletedList implements OnInit {
   isLoading: boolean = false;
@@ -62,10 +62,12 @@ export class CompletedList implements OnInit {
     event.preventDefault();
     this.isDragOver = true;
   }
+
   dragleave(event: DragEvent) {
     event.preventDefault();
     this.isDragOver = false;
   }
+  
   drop(event: DragEvent) {
     event.preventDefault();
     this.isDragOver = false;

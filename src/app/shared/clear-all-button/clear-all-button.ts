@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { TodosService } from './../todos.service';
-import { ErrorComponent } from '../../shared/error-component/error-component';
-import { Spinner } from '../../shared/spinner/spinner';
+import { TodosService } from '../../todos/todos.service';
+import { ErrorComponent } from '../error-component/error-component';
+import { Spinner } from '../spinner/spinner';
 
 @Component({
   selector: 'app-clear-all-button',

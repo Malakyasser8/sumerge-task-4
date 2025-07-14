@@ -16,7 +16,7 @@ import { Spinner } from '../shared/spinner/spinner';
   selector: 'app-pending-list',
   standalone: true,
   templateUrl: './pending-list.html',
-  styleUrl: './pending-list.css',
+  styleUrl: '../shared/shared-list-container.css',
   imports: [PendingItem, FormsModule, Spinner, ErrorComponent],
 })
 export class PendingList implements OnInit {
@@ -80,7 +80,7 @@ export class PendingList implements OnInit {
       );
       return;
     }
-    
+
     this.errorMessage.set('');
     this.isLoading = true;
     const subscriber = this.todosService

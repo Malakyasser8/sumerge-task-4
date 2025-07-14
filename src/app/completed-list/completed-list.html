@@ -1,5 +1,5 @@
 <app-spinner [isLoading]="isLoading" />
-<div id="completed-list" class="completed-list">
+<div class="list-container">
   <h4 class="m-4">Completed List</h4>
   <div
     id="completed-list-search"
@@ -24,7 +24,7 @@
   <app-error-component [errorMessage]="errorMessage()" />
   <section
     id="completed-list-items"
-    class="completed-list-items d-flex justify-content-center flex-column m-4 list-group"
+    class="list-items d-flex justify-content-center flex-column m-4 list-group"
     [class.drag-over]="isDragOver"
     (dragover)="dragOver($event)"
     (dragleave)="dragleave($event)"

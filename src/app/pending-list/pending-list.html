@@ -1,5 +1,5 @@
 <app-spinner [isLoading]="isLoading" />
-<div id="pending-list" class="pending-list">
+<div id="pending-list" class="list-container">
   <h4 class="m-4">Pending List</h4>
   <form
     #form="ngForm"
@@ -58,7 +58,7 @@
   </div>
   <section
     id="pending-list-items"
-    class="pending-list-items d-flex justify-content-center flex-column m-4 list-group"
+    class="list-items d-flex justify-content-center flex-column m-4 list-group"
   >
     @for(todo of filteredPendingTodos(); track todo.id){
     <app-pending-item class="item m-2" [pendingTodo]="todo" />
