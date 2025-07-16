@@ -4,4 +4,5 @@ interface User {
   displayName: string;
   accessToken: string;
   refreshToken: string;
+  expirationDate: Date;
 }

@@ -17,7 +17,7 @@ export class ClearAllButton {
 
   deleteAllData() {
     this.isLoading = true;
-    const subscriber = this.todosService.deleteAllTodos().subscribe({
+    const subscription = this.todosService.deleteAllTodos().subscribe({
       complete: () => {
         console.log('Deleted all todos successfully');
         this.isLoading = false;
@@ -30,6 +30,6 @@ export class ClearAllButton {
       },
     });
 
-    this.ondestoryRef.onDestroy(() => subscriber.unsubscribe());
+    this.ondestoryRef.onDestroy(() => subscription.unsubscribe());
   }
 }

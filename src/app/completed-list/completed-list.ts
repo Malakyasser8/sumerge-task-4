@@ -39,7 +39,7 @@ export class CompletedList implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
-    const subscriber = this.todosService.loadTodos('completed').subscribe({
+    const subscription = this.todosService.loadTodos('completed').subscribe({
       complete: () => {
         console.log('Retrieved Completed Todos successfully');
         console.log(this.completedTodos());
@@ -55,7 +55,7 @@ export class CompletedList implements OnInit {
       },
     });
 
-    this.ondestoryRef.onDestroy(() => subscriber.unsubscribe());
+    this.ondestoryRef.onDestroy(() => subscription.unsubscribe());
   }
 
   dragOver(event: DragEvent) {
@@ -79,7 +79,7 @@ export class CompletedList implements OnInit {
     console.log('Dropped todo:', draggedTodo);
 
     this.isLoading = true;
-    const subscriber = this.todosService
+    const subscription = this.todosService
       .updateTodo({ ...draggedTodo, status: 'completed' })
       .subscribe({
         complete: () => {
@@ -100,6 +100,6 @@ export class CompletedList implements OnInit {
         },
       });
 
-    this.ondestoryRef.onDestroy(() => subscriber.unsubscribe());
+    this.ondestoryRef.onDestroy(() => subscription.unsubscribe());
   }
 }

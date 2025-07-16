@@ -79,7 +79,7 @@ export class LoginForm {
 
     if (enteredEmail && enteredPassword) {
       const subscription = this.authService
-        .login(enteredEmail, enteredPassword, this.isLoginMode)
+        .loginOrSignup(enteredEmail, enteredPassword, this.isLoginMode)
         .subscribe({
           next: (val) => {
             console.log(`Logged in successfully. Loggin user details`);
@@ -88,12 +88,9 @@ export class LoginForm {
           complete: () => {
             console.log(`Logged in successfully`);
             this.isLoading = false;
-            this.router.navigate(
-              ['/todos', 'user', this.authService.getCurrentUser()?.id],
-              {
-                replaceUrl: true, //go back to login form aady
-              }
-            );
+            this.router.navigate(['/todos'], {
+              replaceUrl: false, //don't go back to login form 
+            });
           },
           error: (error) => {
             this.isLoading = false;

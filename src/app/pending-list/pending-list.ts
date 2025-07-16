@@ -40,7 +40,7 @@ export class PendingList implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
-    const subscriber = this.todosService.loadTodos('pending').subscribe({
+    const subscription = this.todosService.loadTodos('pending').subscribe({
       complete: () => {
         console.log('Retrieved Pending Todos successfully');
         console.log(this.pendingTodos());
@@ -56,7 +56,7 @@ export class PendingList implements OnInit {
       },
     });
 
-    this.ondestoryRef.onDestroy(() => subscriber.unsubscribe());
+    this.ondestoryRef.onDestroy(() => subscription.unsubscribe());
   }
 
   onSubmit(formData: NgForm) {
@@ -82,7 +82,7 @@ export class PendingList implements OnInit {
 
     this.errorMessage.set('');
     this.isLoading = true;
-    const subscriber = this.todosService
+    const subscription = this.todosService
       .insertTodo({
         name: this.todoName(),
         priority: this.priority()!,
@@ -102,7 +102,7 @@ export class PendingList implements OnInit {
         },
       });
 
-    this.ondestoryRef.onDestroy(() => subscriber.unsubscribe());
+    this.ondestoryRef.onDestroy(() => subscription.unsubscribe());
 
     //reset form by clearing input values and reset everything
     formData.form.reset();

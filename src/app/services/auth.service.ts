@@ -1,22 +1,51 @@
 import { catchError, map, throwError, timeout } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthSerivce {
   private httpClient = inject(HttpClient);
+  private router = inject(Router);
+  private tokenExpirationTimer: any;
+  private currentUser: User | null = null;
+
   loginBaseUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCBmENHVczw_URDm00gMnohezionXsj9L0`;
   signUpBaseUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCBmENHVczw_URDm00gMnohezionXsj9L0`;
   timeoutTime: number = 10000;
-  currentUser: User | undefined = undefined;
 
   getCurrentUser() {
-    return this.currentUser;
+    if (
+      this.currentUser?.accessToken &&
+      this.currentUser?.expirationDate >= new Date()
+    ) {
+      return this.currentUser;
+    }
+    this.logout();
+    return null;
   }
 
-  login(email: string, password: string, isLoginMode: boolean) {
+  autoLogin() {
+    const userData = localStorage.getItem('userData');
+    if (!userData) return;
+    const loadedUser = JSON.parse(userData);
+    this.currentUser = {
+      ...loadedUser,
+      expirationDate: new Date(loadedUser.expirationDate),
+    };
+
+    this.currentUser = this.getCurrentUser();
+    if (this.currentUser) {
+      const expirationDuration =
+        new Date(this.currentUser.expirationDate).getTime() -
+        new Date().getTime();
+      this.autoLogout(expirationDuration);
+    }
+  }
+
+  loginOrSignup(email: string, password: string, isLoginMode: boolean) {
     const url = isLoginMode ? this.loginBaseUrl : this.signUpBaseUrl;
     return this.httpClient
       .post<LoginResponseData>(url, {
@@ -26,13 +55,19 @@ export class AuthSerivce {
       })
       .pipe(
         map((response) => {
+          const expirationDate: Date = new Date(
+            new Date().getTime() + parseInt(response.expiresIn) * 1000
+          );
           this.currentUser = {
             id: response.localId,
             email: response.email,
             displayName: response.displayName,
             accessToken: response.idToken,
             refreshToken: response.refreshToken,
+            expirationDate,
           };
+          localStorage.setItem('userData', JSON.stringify(this.currentUser));
+          this.autoLogout(parseInt(response.expiresIn) * 1000);
           return this.currentUser;
         }),
         timeout(this.timeoutTime),
@@ -60,5 +95,20 @@ export class AuthSerivce {
           return throwError(() => new Error(message));
         })
       );
+  }
+
+  logout() {
+    this.currentUser = null;
+    this.router.navigate(['']);
+    localStorage.removeItem('userData');
+    if (this.tokenExpirationTimer) clearTimeout(this.tokenExpirationTimer);
+    this.tokenExpirationTimer = null;
+  }
+
+  autoLogout(expirationDuration: number) {
+    console.log(expirationDuration);
+    this.tokenExpirationTimer = setTimeout(() => {
+      this.logout();
+    }, expirationDuration);
   }
 }

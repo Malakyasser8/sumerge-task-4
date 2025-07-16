@@ -34,7 +34,7 @@ export class PendingItem {
 
   addTodoToCompletedList() {
     this.isLoading = true;
-    const subscriber = this.todosService
+    const subscription = this.todosService
       .updateTodo({ ...this.pendingTodo, status: 'completed' })
       .subscribe({
         complete: () => {
@@ -56,6 +56,6 @@ export class PendingItem {
         },
       });
 
-    this.ondestoryRef.onDestroy(() => subscriber.unsubscribe());
+    this.ondestoryRef.onDestroy(() => subscription.unsubscribe());
   }
 }
