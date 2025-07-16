@@ -30,38 +30,7 @@ export class TodosService {
       .pipe(
         timeout(this.timeoutTime),
         map((resData) => {
-          const docs = resData.documents || [];
-
-          const formatedDocs = docs
-            .map((doc: any) => {
-              const fields = doc.fields || {};
-              return {
-                id: doc.name?.split('/').pop(),
-                name: fields.name?.stringValue,
-                priority: parseInt(fields.priority?.integerValue, 10),
-                status: fields.status?.stringValue,
-                userId: fields.userId?.stringValue,
-              } as Todo;
-            })
-            .sort((a: Todo, b: Todo) => a.priority - b.priority);
-
-          this.pendingTodos.set(
-            formatedDocs
-              .filter(
-                (todo: Todo) =>
-                  todo.userId == this.authService.getCurrentUser()?.id
-              )
-              .filter((todo: Todo) => todo.status == 'pending')
-          );
-          this.completedTodos.set(
-            formatedDocs
-              .filter(
-                (todo: Todo) =>
-                  todo.userId == this.authService.getCurrentUser()?.id
-              )
-              .filter((todo: Todo) => todo.status == 'completed')
-          );
-
+          this.mapAndSetLoadedTodos(resData);
           return requiredStatus == 'pending'
             ? this.pendingTodos
             : this.completedTodos;
@@ -131,28 +100,7 @@ export class TodosService {
       .pipe(
         timeout(this.timeoutTime),
         map((response: any) => {
-          const newTodo: Todo = {
-            id: response.name.split('/').pop(),
-            userId: this.authService.getCurrentUser()?.id!,
-            ...todoInsertBody,
-          };
-
-          const current = [...this.pendingTodos()];
-          let inserted = false;
-
-          for (let i = 0; i < current.length; i++) {
-            if (newTodo.priority < current[i].priority) {
-              current.splice(i, 0, newTodo);
-              inserted = true;
-              break;
-            }
-          }
-
-          if (!inserted) {
-            current.push(newTodo);
-          }
-
-          this.pendingTodos.set(current);
+          const newTodo = this.sortNewTodos(response, todoInsertBody);
           return newTodo;
         }),
         catchError((error) => {
@@ -193,5 +141,62 @@ export class TodosService {
           return throwError(() => new Error(error.message));
         })
       );
+  }
+
+  private filterTodos(todos: Todo[], status: Status) {
+    const filtered = todos
+      .filter(
+        (todo: Todo) => todo.userId == this.authService.getCurrentUser()?.id
+      )
+      .filter((todo: Todo) => todo.status == status);
+
+    return filtered;
+  }
+
+  private mapAndSetLoadedTodos(response: any) {
+    const docs = response.documents || [];
+
+    const formatedDocs = docs
+      .map((doc: any) => {
+        const fields = doc.fields || {};
+        return {
+          id: doc.name?.split('/').pop(),
+          name: fields.name?.stringValue,
+          priority: parseInt(fields.priority?.integerValue, 10),
+          status: fields.status?.stringValue,
+          userId: fields.userId?.stringValue,
+        } as Todo;
+      })
+      .sort((a: Todo, b: Todo) => a.priority - b.priority);
+
+    this.pendingTodos.set(this.filterTodos(formatedDocs, 'pending'));
+    this.completedTodos.set(this.filterTodos(formatedDocs, 'completed'));
+  }
+
+  private sortNewTodos(response: any, todoInsertBody: TodoInsertBody) {
+    const newTodo: Todo = {
+      id: response.name.split('/').pop(),
+      userId: this.authService.getCurrentUser()?.id!,
+      ...todoInsertBody,
+    };
+
+    const current = [...this.pendingTodos()];
+    let inserted = false;
+
+    for (let i = 0; i < current.length; i++) {
+      if (newTodo.priority < current[i].priority) {
+        current.splice(i, 0, newTodo);
+        inserted = true;
+        break;
+      }
+    }
+
+    if (!inserted) {
+      current.push(newTodo);
+    }
+
+    this.pendingTodos.set(current);
+
+    return newTodo;
   }
 }
