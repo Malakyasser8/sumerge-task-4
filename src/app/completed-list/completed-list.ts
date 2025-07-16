@@ -8,9 +8,9 @@ import {
   signal,
 } from '@angular/core';
 import { CompletedItem } from './completed-item/completed-item';
-import { TodosService } from '../todos/todos.service';
+import { TodosService } from '../services/todos.service';
 import { FormsModule } from '@angular/forms';
-import { Todo } from '../todos/todos.model';
+import { Todo } from '../models/todos.model';
 import { Spinner } from '../shared/spinner/spinner';
 
 @Component({
@@ -67,7 +67,7 @@ export class CompletedList implements OnInit {
     event.preventDefault();
     this.isDragOver = false;
   }
-  
+
   drop(event: DragEvent) {
     event.preventDefault();
     this.isDragOver = false;

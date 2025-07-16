@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { PendingItem } from './pending-item/pending-item';
-import { TodosService } from '../todos/todos.service';
+import { TodosService } from '../services/todos.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ErrorComponent } from '../shared/error-component/error-component';
 import { Spinner } from '../shared/spinner/spinner';
@@ -41,7 +41,6 @@ export class PendingList implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
     const subscriber = this.todosService.loadTodos('pending').subscribe({
-      next: (val) => console.log(val),
       complete: () => {
         console.log('Retrieved Pending Todos successfully');
         console.log(this.pendingTodos());

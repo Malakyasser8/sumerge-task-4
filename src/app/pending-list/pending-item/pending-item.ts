@@ -1,6 +1,6 @@
-import { TodosService } from './../../todos/todos.service';
+import { TodosService } from '../../services/todos.service';
 import { Component, Input, signal, inject, DestroyRef } from '@angular/core';
-import { Todo } from '../../todos/todos.model';
+import { Todo } from '../../models/todos.model';
 import { ErrorComponent } from '../../shared/error-component/error-component';
 import { Spinner } from '../../shared/spinner/spinner';
 

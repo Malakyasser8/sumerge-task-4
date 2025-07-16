@@ -8,4 +8,5 @@ export interface TodoInsertBody {
 
 export interface Todo extends TodoInsertBody {
   id: string;
+  userId: string;
 }

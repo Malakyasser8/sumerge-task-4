@@ -1,0 +1,38 @@
+.form-container {
+  width: 40%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: 1px;
+  border-style: ridge;
+  border-radius: 20px;
+  background-color: white;
+  text-align: center;
+  padding: 4%;
+  padding-bottom: 2%;
+  margin-bottom: 2rem;
+}
+
+.form-field {
+  width: 100%;
+  overflow-wrap: break-word;
+}
+
+span {
+  width: 100%;
+  overflow-wrap: break-word;
+  display: inline-block;
+}
+
+.addPadding {
+  padding-bottom: 5%;
+}
+
+.button-decorator {
+  background-color: rgb(54, 109, 205);
+  border: 0;
+  color: aliceblue;
+  margin-bottom: 2%;
+}

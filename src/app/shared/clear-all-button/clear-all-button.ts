@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { TodosService } from '../../todos/todos.service';
+import { TodosService } from '../../services/todos.service';
 import { ErrorComponent } from '../error-component/error-component';
 import { Spinner } from '../spinner/spinner';
 
