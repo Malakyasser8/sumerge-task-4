@@ -1,18 +1,17 @@
 import { TodosService } from '../../services/todos.service';
 import { Component, Input, signal, inject, DestroyRef } from '@angular/core';
 import { Todo } from '../../models/todos.model';
-import { ErrorComponent } from '../../shared/error-component/error-component';
 import { Spinner } from '../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-pending-item',
-  imports: [ErrorComponent, Spinner],
+  imports: [Spinner],
   templateUrl: './pending-item.html',
   styleUrl: './pending-item.css',
 })
 export class PendingItem {
   @Input({ required: true }) pendingTodo!: Todo;
-  errorMessage = signal<string>('');
+  errorMessage = '';
   checkboxChecked = false;
   isLoading: boolean = false;
   todosService = inject(TodosService);
@@ -44,12 +43,11 @@ export class PendingItem {
             } with data: ${JSON.stringify(JSON.stringify(this.pendingTodo))}`
           );
           this.isLoading = false;
-          this.errorMessage.set('');
+          this.errorMessage = '';
         },
         error: (err: Error) => {
-          this.errorMessage.set(
-            'Error while marking todo as completed. Please try again later'
-          );
+          this.errorMessage =
+            'Error while marking todo as completed. Please try again later';
           console.log(err.message);
           this.checkboxChecked = false;
           this.isLoading = false;

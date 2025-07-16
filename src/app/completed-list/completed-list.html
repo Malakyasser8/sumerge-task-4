@@ -21,7 +21,9 @@
       <i class="bi bi-search"></i>
     </button>
   </div>
-  <app-error-component [errorMessage]="errorMessage()" />
+  <div id="error-input" class="error-msg mx-4">
+    {{ errorMessage }}
+  </div>
   <section
     id="completed-list-items"
     class="list-items d-flex justify-content-center flex-column m-4 list-group"

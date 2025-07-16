@@ -1,17 +1,16 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { TodosService } from '../../services/todos.service';
-import { ErrorComponent } from '../error-component/error-component';
 import { Spinner } from '../spinner/spinner';
 
 @Component({
   selector: 'app-clear-all-button',
-  imports: [ErrorComponent, Spinner],
+  imports: [ Spinner],
   templateUrl: './clear-all-button.html',
   styleUrl: './clear-all-button.css',
 })
 export class ClearAllButton {
   isLoading: boolean = false;
-  errorMessage = signal<string>('');
+  errorMessage =''
   todosService = inject(TodosService);
   ondestoryRef = inject(DestroyRef);
 
@@ -23,9 +22,8 @@ export class ClearAllButton {
         this.isLoading = false;
       },
       error: (err: Error) => {
-        this.errorMessage.set(
+        this.errorMessage=
           'Error while deleting all Todos. Please try again later'
-        );
         console.log(err.message);
       },
     });

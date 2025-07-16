@@ -34,7 +34,9 @@
         Add
       </button>
     </div>
-    <app-error-component [errorMessage]="errorMessage()" />
+    <div id="error-input" class="error-msg mx-4">
+      {{ errorMessage }}
+    </div>
   </form>
   <div
     id="pending-list-search"

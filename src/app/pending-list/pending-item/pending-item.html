@@ -24,5 +24,7 @@
   >
     {{ `${pendingTodo.priority}. ${pendingTodo.name}` }}
   </label>
-  <app-error-component [errorMessage]="errorMessage()" />
+  <div id="error-input" class="error-msg mx-4">
+    {{ errorMessage }}
+  </div>
 </div>

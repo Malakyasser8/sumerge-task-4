@@ -1,4 +1,3 @@
-import { ErrorComponent } from '../shared/error-component/error-component';
 import {
   Component,
   computed,
@@ -15,14 +14,14 @@ import { Spinner } from '../shared/spinner/spinner';
 
 @Component({
   selector: 'app-completed-list',
-  imports: [CompletedItem, FormsModule, ErrorComponent, Spinner],
+  imports: [CompletedItem, FormsModule, Spinner],
   templateUrl: './completed-list.html',
   styleUrls: ['./completed-list.css', '../shared/shared-list-container.css'],
 })
 export class CompletedList implements OnInit {
   isLoading: boolean = false;
   isDragOver: boolean = false;
-  errorMessage = signal<string>('');
+  errorMessage = '';
   searchText = signal<string>('');
 
   ondestoryRef = inject(DestroyRef);
@@ -44,12 +43,11 @@ export class CompletedList implements OnInit {
         console.log('Retrieved Completed Todos successfully');
         console.log(this.completedTodos());
         this.isLoading = false;
-        this.errorMessage.set('');
+        this.errorMessage = '';
       },
       error: (err: Error) => {
-        this.errorMessage.set(
-          'Error retriving completed todos. Please try again later'
-        );
+        this.errorMessage =
+          'Error retriving completed todos. Please try again later';
         console.log(err.message);
         this.isLoading = false;
       },
@@ -88,13 +86,12 @@ export class CompletedList implements OnInit {
               draggedTodo.id
             } with data: ${JSON.stringify(JSON.stringify(draggedTodo))}`
           );
-          this.errorMessage.set('');
+          this.errorMessage=''
           this.isLoading = false;
         },
         error: (err: Error) => {
-          this.errorMessage.set(
+          this.errorMessage=
             'Error while marking todo as completed. Please try again later'
-          );
           console.log(err.message);
           this.isLoading = false;
         },

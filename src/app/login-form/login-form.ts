@@ -11,7 +11,6 @@ import { MatInputModule } from '@angular/material/input';
 import { AuthSerivce } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { Spinner } from '../shared/spinner/spinner';
-import { ErrorComponent } from '../shared/error-component/error-component';
 
 @Component({
   selector: 'app-login-form',
@@ -21,7 +20,6 @@ import { ErrorComponent } from '../shared/error-component/error-component';
     MatInputModule,
     MatButtonModule,
     Spinner,
-    ErrorComponent,
   ],
   templateUrl: './login-form.html',
   styleUrls: ['./login-form.css', '../shared/shared-list-container.css'],
@@ -30,7 +28,7 @@ export class LoginForm {
   authService = inject(AuthSerivce);
   private router = inject(Router);
   destroyRef = inject(DestroyRef);
-  errorMessage = signal<string>('');
+  errorMessage = '';
   isLoading: boolean = false;
   isLoginMode: boolean = true;
 
@@ -59,13 +57,13 @@ export class LoginForm {
 
   constructor() {
     this.loginForm.valueChanges.subscribe(() => {
-      this.errorMessage.set('');
+      this.errorMessage = '';
     });
   }
 
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
-    this.errorMessage.set('');
+    this.errorMessage = '';
   }
 
   onSubmit() {
@@ -89,14 +87,14 @@ export class LoginForm {
             console.log(`Logged in successfully`);
             this.isLoading = false;
             this.router.navigate(['/todos'], {
-              replaceUrl: false, //don't go back to login form 
+              replaceUrl: false, //don't go back to login form
             });
           },
           error: (error) => {
             this.isLoading = false;
             console.log(`Error occured`);
             console.log(error);
-            this.errorMessage.set(error);
+            this.errorMessage = error;
           },
         });
 
