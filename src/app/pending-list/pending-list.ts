@@ -10,6 +10,7 @@ import { PendingItem } from './pending-item/pending-item';
 import { TodosService } from '../services/todos.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Spinner } from '../shared/spinner/spinner';
+import { Status } from '../models/todos.model';
 
 @Component({
   selector: 'app-pending-list',
@@ -39,7 +40,7 @@ export class PendingList implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
-    const subscription = this.todosService.loadTodos('pending').subscribe({
+    const subscription = this.todosService.loadTodos(Status.Pending).subscribe({
       complete: () => {
         console.log('Retrieved Pending Todos successfully');
         console.log(this.pendingTodos());
@@ -82,7 +83,7 @@ export class PendingList implements OnInit {
       .insertTodo({
         name: this.todoName(),
         priority: this.priority()!,
-        status: 'pending',
+        status: Status.Pending,
       })
       .subscribe({
         complete: () => {

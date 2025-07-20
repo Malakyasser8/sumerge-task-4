@@ -9,7 +9,7 @@ import {
 import { CompletedItem } from './completed-item/completed-item';
 import { TodosService } from '../services/todos.service';
 import { FormsModule } from '@angular/forms';
-import { Todo } from '../models/todos.model';
+import { Status, Todo } from '../models/todos.model';
 import { Spinner } from '../shared/spinner/spinner';
 
 @Component({
@@ -38,20 +38,22 @@ export class CompletedList implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
-    const subscription = this.todosService.loadTodos('completed').subscribe({
-      complete: () => {
-        console.log('Retrieved Completed Todos successfully');
-        console.log(this.completedTodos());
-        this.isLoading = false;
-        this.errorMessage = '';
-      },
-      error: (err: Error) => {
-        this.errorMessage =
-          'Error retriving completed todos. Please try again later';
-        console.log(err.message);
-        this.isLoading = false;
-      },
-    });
+    const subscription = this.todosService
+      .loadTodos(Status.Completed)
+      .subscribe({
+        complete: () => {
+          console.log('Retrieved Completed Todos successfully');
+          console.log(this.completedTodos());
+          this.isLoading = false;
+          this.errorMessage = '';
+        },
+        error: (err: Error) => {
+          this.errorMessage =
+            'Error retriving completed todos. Please try again later';
+          console.log(err.message);
+          this.isLoading = false;
+        },
+      });
 
     this.ondestoryRef.onDestroy(() => subscription.unsubscribe());
   }
@@ -78,7 +80,7 @@ export class CompletedList implements OnInit {
 
     this.isLoading = true;
     const subscription = this.todosService
-      .updateTodo({ ...draggedTodo, status: 'completed' })
+      .updateTodo({ ...draggedTodo, status: Status.Completed })
       .subscribe({
         complete: () => {
           console.log(
@@ -86,12 +88,12 @@ export class CompletedList implements OnInit {
               draggedTodo.id
             } with data: ${JSON.stringify(JSON.stringify(draggedTodo))}`
           );
-          this.errorMessage=''
+          this.errorMessage = '';
           this.isLoading = false;
         },
         error: (err: Error) => {
-          this.errorMessage=
-            'Error while marking todo as completed. Please try again later'
+          this.errorMessage =
+            'Error while marking todo as completed. Please try again later';
           console.log(err.message);
           this.isLoading = false;
         },

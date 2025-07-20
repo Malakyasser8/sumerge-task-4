@@ -31,7 +31,7 @@ export class TodosService {
         timeout(this.timeoutTime),
         map((resData) => {
           this.mapAndSetLoadedTodos(resData);
-          return requiredStatus == 'pending'
+          return requiredStatus == Status.Pending
             ? this.pendingTodos
             : this.completedTodos;
         }),
@@ -169,8 +169,8 @@ export class TodosService {
       })
       .sort((a: Todo, b: Todo) => a.priority - b.priority);
 
-    this.pendingTodos.set(this.filterTodos(formatedDocs, 'pending'));
-    this.completedTodos.set(this.filterTodos(formatedDocs, 'completed'));
+    this.pendingTodos.set(this.filterTodos(formatedDocs, Status.Pending));
+    this.completedTodos.set(this.filterTodos(formatedDocs, Status.Completed));
   }
 
   private sortNewTodos(response: any, todoInsertBody: TodoInsertBody) {

@@ -6,7 +6,7 @@ import { NgForm } from '@angular/forms';
 
 import { PendingList } from './pending-list';
 import { TodosService } from '../services/todos.service';
-import { Todo } from '../models/todos.model';
+import { Status, Todo } from '../models/todos.model';
 
 describe('PendingList', () => {
   let component: PendingList;
@@ -20,21 +20,21 @@ describe('PendingList', () => {
       userId: '1',
       name: 'Task One',
       priority: 1,
-      status: 'pending',
+      status: Status.Pending,
     },
     {
       id: '2',
       userId: '1',
       name: 'Another Task',
       priority: 2,
-      status: 'pending',
+      status: Status.Pending,
     },
     {
       id: '3',
       userId: '1',
       name: 'Important Task',
       priority: 3,
-      status: 'pending',
+      status: Status.Pending,
     },
   ];
 
@@ -78,7 +78,7 @@ describe('PendingList', () => {
 
   it('should call loadTodos with "pending" status on ngOnInit', () => {
     component.ngOnInit();
-    expect(mockTodosService.loadTodos).toHaveBeenCalledWith('pending');
+    expect(mockTodosService.loadTodos).toHaveBeenCalledWith(Status.Pending);
   });
 
   it('should set isLoading to false on successful load', () => {
@@ -203,7 +203,7 @@ describe('PendingList', () => {
       of({
         name: 'Test Todo',
         priority: 1,
-        status: 'pending',
+        status: Status.Pending,
       } as Todo)
     );
 
@@ -225,7 +225,7 @@ describe('PendingList', () => {
     expect(mockTodosService.insertTodo).toHaveBeenCalledWith({
       name: 'Test Todo',
       priority: 1,
-      status: 'pending',
+      status: Status.Pending,
     });
   });
 
@@ -234,7 +234,7 @@ describe('PendingList', () => {
       of({
         name: 'Test Todo',
         priority: 1,
-        status: 'pending',
+        status: Status.Pending,
       } as Todo)
     );
 
@@ -286,7 +286,7 @@ describe('PendingList', () => {
       of({
         name: 'Test Todo',
         priority: 1,
-        status: 'pending',
+        status: Status.Pending,
       } as Todo)
     );
 

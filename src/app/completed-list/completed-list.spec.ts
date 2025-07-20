@@ -5,7 +5,7 @@ import { of, throwError } from 'rxjs';
 
 import { CompletedList } from './completed-list';
 import { TodosService } from '../services/todos.service';
-import { Todo } from '../models/todos.model';
+import { Status, Todo } from '../models/todos.model';
 
 describe('CompletedList', () => {
   let component: CompletedList;
@@ -19,14 +19,14 @@ describe('CompletedList', () => {
       userId: '1',
       name: 'Task One',
       priority: 1,
-      status: 'completed',
+      status: Status.Completed,
     },
     {
       id: '2',
       userId: '1',
       name: 'Another Task',
       priority: 2,
-      status: 'completed',
+      status: Status.Completed,
     },
   ];
 
@@ -63,7 +63,7 @@ describe('CompletedList', () => {
 
     expect(component.isLoading).toBeFalse();
     expect(component.errorMessage).toBe('');
-    expect(mockTodosService.loadTodos).toHaveBeenCalledWith('completed');
+    expect(mockTodosService.loadTodos).toHaveBeenCalledWith(Status.Completed);
   });
 
   it('should handle error when loading todos', () => {
@@ -92,7 +92,7 @@ describe('CompletedList', () => {
       userId: '1',
       name: 'Task One',
       priority: 1,
-      status: 'pending',
+      status: Status.Pending,
     };
 
     mockTodosService.updateTodo.and.returnValue(of(undefined));
@@ -111,7 +111,7 @@ describe('CompletedList', () => {
     expect(component.isLoading).toBeFalse();
     expect(mockTodosService.updateTodo).toHaveBeenCalledWith({
       ...droppedTodo,
-      status: 'completed',
+      status: Status.Completed,
     });
     expect(component.errorMessage).toBe('');
   });
@@ -136,7 +136,7 @@ describe('CompletedList', () => {
       id: '2',
       name: 'Bad Task',
       priority: 5,
-      status: 'pending',
+      status: Status.Pending,
     };
 
     mockTodosService.updateTodo.and.returnValue(

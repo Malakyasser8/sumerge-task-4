@@ -1,4 +1,7 @@
-export type Status = 'pending' | 'completed';
+export enum Status {
+  Pending = 'pending',
+  Completed = 'completed',
+}
 
 export interface TodoInsertBody {
   name: string;

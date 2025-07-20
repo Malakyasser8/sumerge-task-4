@@ -1,6 +1,6 @@
 import { TodosService } from '../../services/todos.service';
 import { Component, Input, signal, inject, DestroyRef } from '@angular/core';
-import { Todo } from '../../models/todos.model';
+import { Status, Todo } from '../../models/todos.model';
 import { Spinner } from '../../shared/spinner/spinner';
 
 @Component({
@@ -34,7 +34,7 @@ export class PendingItem {
   addTodoToCompletedList() {
     this.isLoading = true;
     const subscription = this.todosService
-      .updateTodo({ ...this.pendingTodo, status: 'completed' })
+      .updateTodo({ ...this.pendingTodo, status: Status.Completed })
       .subscribe({
         complete: () => {
           console.log(

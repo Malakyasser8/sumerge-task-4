@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClient } from '@angular/common/http';
 
 import { TodosService } from './todos.service';
-import { Todo, TodoInsertBody } from '../models/todos.model';
+import { Status, Todo, TodoInsertBody } from '../models/todos.model';
 import { of, throwError } from 'rxjs';
 import { AuthSerivce } from './auth.service';
 
@@ -21,14 +21,14 @@ describe('Todos', () => {
       id: '1',
       name: 'Test A',
       priority: 1,
-      status: 'pending',
+      status: Status.Pending,
       userId: 'user123',
     },
     {
       id: '2',
       name: 'Test B',
       priority: 2,
-      status: 'completed',
+      status: Status.Completed,
       userId: 'user123',
     },
   ];
@@ -40,7 +40,7 @@ describe('Todos', () => {
         fields: {
           name: { stringValue: 'Test A' },
           priority: { integerValue: '1' },
-          status: { stringValue: 'pending' },
+          status: { stringValue: Status.Pending },
           userId: { stringValue: 'user123' },
         },
       },
@@ -49,7 +49,7 @@ describe('Todos', () => {
         fields: {
           name: { stringValue: 'Test B' },
           priority: { integerValue: '2' },
-          status: { stringValue: 'completed' },
+          status: { stringValue: Status.Completed },
           userId: { stringValue: 'user123' },
         },
       },
@@ -83,10 +83,10 @@ describe('Todos', () => {
   it('should load todos and filter them by status', (done) => {
     mockHttpClient.get.and.returnValue(of(mockFirebaseResponse));
 
-    service.loadTodos('pending').subscribe((signal) => {
+    service.loadTodos(Status.Pending).subscribe((signal) => {
       const pending = signal();
       expect(pending.length).toBe(1);
-      expect(pending[0].status).toBe('pending');
+      expect(pending[0].status).toBe(Status.Pending);
       done();
     });
   });
@@ -96,7 +96,7 @@ describe('Todos', () => {
       throwError(() => new Error('Load failed'))
     );
 
-    service.loadTodos('pending').subscribe({
+    service.loadTodos(Status.Pending).subscribe({
       error: (err) => {
         expect(err.message).toBe('Load failed');
         done();
@@ -108,7 +108,7 @@ describe('Todos', () => {
     const insertBody: TodoInsertBody = {
       name: 'Inserted Task',
       priority: 0,
-      status: 'pending',
+      status: Status.Pending,
     };
 
     const mockResponse = {
@@ -152,7 +152,7 @@ describe('Todos', () => {
   it('should update a todo status and move it to completed', (done) => {
     const updatedTodo: Todo = {
       ...mockTodos[0],
-      status: 'completed',
+      status: Status.Completed,
     };
 
     mockHttpClient.patch.and.returnValue(of({}));

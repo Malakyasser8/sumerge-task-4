@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClient } from '@angular/common/http';
 import { PendingItem } from './pending-item';
-import { Todo } from '../../models/todos.model';
+import { Status, Todo } from '../../models/todos.model';
 
 describe('PendingItem', () => {
   let component: PendingItem;
@@ -13,7 +13,7 @@ describe('PendingItem', () => {
     userId: '123',
     name: 'Test Todo',
     priority: 1,
-    status: 'pending',
+    status: Status.Pending,
   };
 
   beforeEach(async () => {
