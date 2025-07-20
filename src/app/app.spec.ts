@@ -1,10 +1,17 @@
 import { TestBed } from '@angular/core/testing';
+
 import { App } from './app';
+import { AuthSerivce } from './services/auth.service';
 
 describe('App', () => {
+  let mockAuthService: jasmine.SpyObj<AuthSerivce>;
+
   beforeEach(async () => {
+    mockAuthService = jasmine.createSpyObj('AuthSerivce', ['autoLogin']);
+
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [{ provide: AuthSerivce, useValue: mockAuthService }],
     }).compileComponents();
   });
 
@@ -14,10 +21,9 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', () => {
+  it('should have the title as `todo-list-angular` ', () => {
     const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, todo-list-angular');
+    const app = fixture.componentInstance;
+    expect(app.title).toEqual('todo-list-angular');
   });
 });

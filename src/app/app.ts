@@ -9,7 +9,7 @@ import { AuthSerivce } from './services/auth.service';
   styleUrl: './app.css',
 })
 export class App implements OnInit {
-  protected title = 'todo-list-angular';
+  title = 'todo-list-angular';
   authService = inject(AuthSerivce);
 
   ngOnInit(): void {
