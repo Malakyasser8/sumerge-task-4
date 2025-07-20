@@ -1,7 +1,8 @@
 import { catchError, map, throwError, timeout } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoginResponseData } from '../models/response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,7 @@ import { Router } from '@angular/router';
 export class AuthSerivce {
   private httpClient = inject(HttpClient);
   private router = inject(Router);
-  private tokenExpirationTimer: any;
+  private tokenExpirationTimer: number | null = null;
   private currentUser: User | null = null;
 
   loginBaseUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCBmENHVczw_URDm00gMnohezionXsj9L0`;
@@ -54,12 +55,12 @@ export class AuthSerivce {
         returnSecureToken: true,
       })
       .pipe(
-        map((response) => {
+        map((response: LoginResponseData) => {
           this.setCurrentUser(response);
           return this.currentUser;
         }),
         timeout(this.timeoutTime),
-        catchError((error: any) => {
+        catchError((error: HttpErrorResponse) => {
           const message = this.handleError(error);
           return throwError(() => new Error(message));
         })
@@ -81,7 +82,7 @@ export class AuthSerivce {
     }, expirationDuration);
   }
 
-  private handleError(error: any) {
+  private handleError(error: HttpErrorResponse) {
     let message = 'An unknown error occured. Please try again later';
     if (error?.error?.error?.message) {
       switch (error.error.error.message) {
@@ -104,7 +105,7 @@ export class AuthSerivce {
     return message;
   }
 
-  private setCurrentUser(response: any) {
+  private setCurrentUser(response: LoginResponseData) {
     const expirationDate: Date = new Date(
       new Date().getTime() + parseInt(response.expiresIn) * 1000
     );

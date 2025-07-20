@@ -3,6 +3,10 @@ import { inject, Injectable, signal } from '@angular/core';
 import { catchError, forkJoin, map, throwError, timeout } from 'rxjs';
 import { Status, Todo, TodoInsertBody } from '../models/todos.model';
 import { AuthSerivce } from './auth.service';
+import {
+  LoadTodosResponseData,
+  TodoResponseData,
+} from '../models/response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -79,7 +83,7 @@ export class TodosService {
 
   insertTodo(todoInsertBody: TodoInsertBody) {
     return this.httpClient
-      .post(
+      .post<TodoResponseData>(
         this.baseUrl,
         JSON.stringify({
           fields: {
@@ -99,7 +103,8 @@ export class TodosService {
       )
       .pipe(
         timeout(this.timeoutTime),
-        map((response: any) => {
+        map((response: TodoResponseData) => {
+          console.log(response);
           const newTodo = this.sortNewTodos(response, todoInsertBody);
           return newTodo;
         }),
@@ -130,7 +135,7 @@ export class TodosService {
       )
       .pipe(
         timeout(this.timeoutTime),
-        map((reponse: any) => {
+        map(() => {
           this.pendingTodos.set(
             this.pendingTodos().filter((todo) => todo.id != updatedTodo.id)
           );
@@ -153,11 +158,12 @@ export class TodosService {
     return filtered;
   }
 
-  private mapAndSetLoadedTodos(response: any) {
+  private mapAndSetLoadedTodos(response: LoadTodosResponseData) {
+    console.log(response);
     const docs = response.documents || [];
 
     const formatedDocs = docs
-      .map((doc: any) => {
+      .map((doc: TodoResponseData) => {
         const fields = doc.fields || {};
         return {
           id: doc.name?.split('/').pop(),
@@ -173,9 +179,12 @@ export class TodosService {
     this.completedTodos.set(this.filterTodos(formatedDocs, Status.Completed));
   }
 
-  private sortNewTodos(response: any, todoInsertBody: TodoInsertBody) {
+  private sortNewTodos(
+    response: TodoResponseData,
+    todoInsertBody: TodoInsertBody
+  ) {
     const newTodo: Todo = {
-      id: response.name.split('/').pop(),
+      id: response.name.split('/').pop() || '',
       userId: this.authService.getCurrentUser()?.id!,
       ...todoInsertBody,
     };
